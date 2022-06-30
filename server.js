@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 const nanoid = require("nano-id");
-const { createNewNote, deleteSelectedNote, findById } = require('./lib/notes'); 
+const { createNewNote, deleteSelectedNote, findById } = require('./Lib/notes'); 
 const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3001;
