@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // gets the information sent from the user and adds it to the notes db
-function createNewNote (body, notesArray) {
+function createNewNote(body, notesArray) {
     const note = body;
     notesArray.push(note);
     fs.writeFileSync(
@@ -11,6 +11,14 @@ function createNewNote (body, notesArray) {
     );
     return note;
 }
+
+function findById(id, notes) {
+    const result = notes.filter(note => note.id === id)[0];
+    return result;
+}
+
+
 module.exports = {
-    createNewNote
+    createNewNote,
+    findById
 }
