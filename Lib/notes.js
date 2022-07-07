@@ -17,8 +17,14 @@ function findById(id, notes) {
     return result;
 }
 
+function findByIdAndDelete(id, notesArray) {
+    const result = notesArray.filter(note => note.id !== id);
+    fs.writeFileSync(path.join(__dirname, '../db/db.json'), JSON.stringify({ notes: result }, null, 2));
+}
+
 
 module.exports = {
     createNewNote,
-    findById
+    findById,
+    findByIdAndDelete
 }

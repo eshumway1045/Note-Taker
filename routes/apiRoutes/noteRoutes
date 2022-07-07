@@ -1,35 +1,42 @@
 const router = require('express').Router();
-const {  findById, createNewNote  } = require('../../Lib/notes');
+const { findById, createNewNote, findByIdAndDelete } = require('../../Lib/notes');
 const { notes } = require('../../db/db.json');
 const fs = require('fs');
 
 router.get('/notes', (req, res) => {
-    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
-        res.json(JSON.parse(data));
-    });
+  fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+    res.json(JSON.parse(data));
+  });
 })
 
 router.get('/notes/:id', (req, res) => {
-    const result = findById(req.params.id, notes);
-    if (result) {
-      res.json(result);
-    } else {
-      res.send(404);
-    }
+  const result = findById(req.params.id, notes);
+  if (result) {
+    res.json(result);
+  } else {
+    res.send(404);
+  }
+});
+
+router.post('/notes', (req, res) => {
+
+  req.body.id = notes.length.toString();
+
+  if (!req.body.title || !req.body.text) {
+    res.status(400).send('The note is not properly formatted.');
+  } else {
+    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+      createNewNote(req.body, JSON.parse(data).notes);
+    })
+  }
+});
+
+router.delete('/notes/:id', (req,res) => {
+  fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+    findByIdAndDelete(req.params.id, JSON.parse(data).notes);
   });
-  
-  router.post('/notes', (req, res) => {
-
-    req.body.id = notes.length.toString();
-  
-    if (!req.body.title || !req.body.text) {
-      res.status(400).send('The note is not properly formatted.');
-    } else {
-      fs.readFile('./db/db.json', 'utf-8', (err, data) => {
-        createNewNote(req.body, JSON.parse(data).notes);
-      })
-    }
-  });
+  res.json(req.body);
+});
 
 
-  module.exports = router;
+module.exports = router;
